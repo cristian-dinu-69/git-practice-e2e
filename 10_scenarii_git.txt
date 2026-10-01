@@ -1,0 +1,370 @@
+10 SCENARII GIT — DE LA SIMPLU LA COMPLEX
+Laborator pentru Cristian: main + contul colab
+
+CUM FOLOSESTI ACEST FISIER
+Rezolva pe rand. Cerintele sunt primele; indicii si solutiile sunt la final.
+Nu trebuie sa termini intr-o seara. Explica cu voce tare ce face fiecare comanda.
+Editeaza fisierele in VS Code: astfel eviti diferentele dintre PowerShell,
+Git Bash, Linux si macOS. Comenzile Git de mai jos functioneaza pe toate.
+In comenzile cu <HASH> sau <URL>, inlocuieste marcajul, inclusiv parantezele.
+
+PREGATIRE UNICA
+Creeaza un repository GitHub privat: git-practice-e2e, cu README initial.
+Invita cristian-dinu-colab si accepta invitatia pe contul colab.
+Contul principal: cristian-dinu-69. Vom numi copia lui A.
+Contul colaborator: cristian-dinu-colab. Vom numi copia lui B.
+Cloneaza repository-ul pe ambele calculatoare:
+  git clone <URL_COPIAT_DIN_GITHUB>
+  cd git-practice-e2e
+  git status
+  git remote -v
+Verifica identitatea Git cu git config user.name si git config user.email.
+Identitatea commit-ului si contul folosit pentru autentificare sunt distincte.
+Alternativa fara al doilea calculator: doua clone in directoare diferite.
+Poti simula modificarile A/B, dar review-ul cu doua conturi cere autentificarea
+corespunzatoare. Nu schimba conturile de companie pentru aceste exercitii.
+
+REGULI DE LABORATOR
+Lucreaza exclusiv in acest repo de exercitii, fara date sau secrete reale.
+Inainte de schimbare de branch: git status. Nu ignora modificarile locale.
+La inceputul fiecarui scenariu, pe copia care va lucra:
+  git switch main
+  git fetch origin
+  git merge --ff-only origin/main
+Daca ultima comanda refuza, nu continua mecanic: verifica istoricul.
+Verifica branch-ul cu git branch --show-current.
+Pentru integrarea PR-urilor foloseste Create a merge commit, daca este disponibil.
+Nu sterge branch-urile pana cand exercitiul care le foloseste este terminat.
+Nu folosi force push pe main. State-urile Terraform nu au ce cauta aici.
+
+======================================================================
+SCENARIUL 1 — PRIMUL COMMIT, STAGING SI PUSH (foarte simplu)
+======================================================================
+Context: vrei sa publici un mic fisier fara sa incluzi tot ce ai local.
+Pe A, din main actualizat, creeaza branch-ul exercise/01-first-commit.
+Creeaza intro.txt cu exact:
+  Autor: Cristian
+  Obiectiv: invat Git cap-coada
+Creeaza si scratch.txt cu un text temporar, dar NU il publica.
+Sarcini:
+1. Inspecteaza starea; adauga numai intro.txt in staging.
+2. Verifica diferenta staged, creeaza commit-ul si publica branch-ul.
+3. Deschide PR spre main si integreaza-l din GitHub.
+4. Actualizeaza main local. Sterge manual scratch.txt dupa exercitiu.
+Succes: intro.txt exista pe GitHub; scratch.txt nu exista acolo.
+Intrebare: ce diferenta este intre working tree, staging si commit?
+
+======================================================================
+SCENARIUL 2 — IGNORE SI FISIER DEJA URMARIT (simplu)
+======================================================================
+Pe A, creeaza exercise/02-ignore din main actualizat.
+Creeaza demo.log cu 'log de laborator', apoi fa commit DOAR cu acest fisier.
+Creeaza .gitignore cu linia:
+  *.log
+Problema intentionata: modifica demo.log. Inca apare ca modificat!
+Sarcini:
+1. Explica de ce .gitignore nu ajunge.
+2. Scoate demo.log din urmarirea Git, pastrand fisierul pe calculator.
+3. Creeaza temp.log si verifica de ce este ignorat.
+4. Comite .gitignore si eliminarea din index; publica si integreaza PR-ul.
+Succes: niciun .log in versiunea finala pe GitHub; demo.log ramane local.
+Intrebare: eliminarea din index elimina si commit-ul vechi din istoric?
+
+======================================================================
+SCENARIUL 3 — FETCH, MAIN IN URMA SI BRANCH ACTUALIZAT (simplu-mediu)
+======================================================================
+Pe B, pornind din main actualizat, creeaza exercise/03-colab-update.
+Adauga team.txt cu 'Colaborarea functioneaza', commit, push, PR si merge.
+Pe A nu actualiza inca main.
+Sarcini pe A:
+1. Ruleaza fetch si inspecteaza diferenta dintre main si origin/main.
+2. Citeste team.txt de pe origin/main fara sa schimbi main local.
+3. Actualizeaza main prin fast-forward.
+4. Creeaza exercise/03-followup din main actualizat si adauga o a doua linie
+   in team.txt. Commit, push, PR si merge.
+Succes: ambele linii sunt pe main; branch-ul tau include actualizarea colab.
+Intrebare: de ce fetch nu a schimbat imediat fisierul local?
+
+======================================================================
+SCENARIUL 4 — SCHIMBARE URGENTA CAND AI LUCRU NESALVAT IN GIT (mediu)
+======================================================================
+Pe A, creeaza exercise/04-wip din main actualizat.
+Modifica intro.txt adaugand 'Lucru in curs'; NU face commit.
+Creeaza notes-wip.txt, tot fara commit.
+Apare o urgenta: README trebuie completat pe un branch separat.
+Sarcini:
+1. Pune deoparte atat modificarea urmarita, cat si fisierul nou.
+2. Creeaza exercise/04-hotfix din main; adauga in README 'Laborator Git'.
+3. Commit, push, PR si merge pentru hotfix.
+4. Revino pe branch-ul WIP si recupereaza lucrul fara sa il pierzi.
+5. Verifica, comite WIP-ul si integreaza-l prin PR.
+Succes: README contine hotfix-ul, iar intro.txt si notes-wip.txt au lucrul tau.
+Intrebare: ce lipseste daca folosesti stash fara -u?
+
+======================================================================
+SCENARIUL 5 — COLABORARE PR SI REVIEW (mediu)
+======================================================================
+Pe A, creeaza exercise/05-main-script din main actualizat.
+Creeaza main.py cu:
+  def total(price, quantity):
+      return price + quantity
+
+  print(total(10, 3))
+Commit, push si PR. Cere review contului B.
+B observa ca functia trebuie sa inmulteasca, nu sa adune.
+Sarcini:
+1. B comenteaza pe linia gresita si cere corectia, fara merge.
+2. A corecteaza pe ACELASI branch, face commit si push.
+3. Observa actualizarea automata a PR-ului existent.
+4. B revede, aproba si integreaza. A actualizeaza main local.
+Succes: scriptul afiseaza 30, iar PR-ul pastreaza discutia si corectia.
+Review-ul nu este obligatoriu tehnic daca protectiile nu sunt configurate.
+Intrebare: trebuie un PR nou pentru fiecare commit de corectie?
+
+======================================================================
+SCENARIUL 6 — CONFLICT PE ACEEASI LINIE (mediu-avansat)
+======================================================================
+Pregatire pe A: pe un branch separat, adauga settings.txt cu 'steps=100';
+commit, push si integrare prin PR. Actualizeaza main pe A si B.
+IMPORTANT: ambele branch-uri de mai jos pornesc din aceasta aceeasi versiune.
+A: exercise/06-a schimba linia in 'steps=1000', commit si push.
+B: exercise/06-b schimba linia in 'steps=2000', commit si push.
+Integreaza intai PR-ul B. Branch-ul A ramane cu schimbarea lui.
+Sarcini pe A:
+1. Fetch; pe exercise/06-a, integreaza origin/main prin merge.
+2. Inspecteaza conflictul si markerii lui. Decizia de laborator este 2000.
+3. Rezolva fisierul, finalizeaza merge-ul si publica branch-ul.
+4. Deschide/actualizeaza PR-ul A si verifica lipsa conflictelor.
+Succes: nu exista markeri, working tree este curat si main are steps=2000.
+Nota: pastrand numai varianta B, PR-ul A poate sa nu aiba diferenta de continut
+fata de main; verifica istoricul si inchide PR-ul daca integrarea este inutila.
+Intrebare: cum abandonezi merge-ul INAINTE sa il finalizezi?
+
+======================================================================
+SCENARIUL 7 — CONFLICT MODIFY/DELETE (avansat)
+======================================================================
+Pregatire: adauga legacy.py pe main prin PR, cu print('versiune veche').
+Actualizeaza A si B; creeaza ambele branch-uri inainte de integrare.
+A: exercise/07-edit modifica in print('versiune corectata'); commit, push.
+B: exercise/07-delete sterge legacy.py; commit, push, PR si merge.
+Sarcini pe A:
+1. Fetch si merge origin/main pe branch-ul exercise/07-edit.
+2. Inspecteaza conflictul modify/delete.
+3. Decizia de laborator: PASTREAZA fisierul corectat de A.
+4. Rezolva, finalizeaza merge-ul, push, PR si merge.
+Succes: legacy.py revine pe main cu mesajul corectat.
+Intrebare: ce comanda ai fi folosit daca decizia era sa accepti stergerea?
+
+======================================================================
+SCENARIUL 8 — COMMIT GRESIT DEJA PUBLICAT: REVERT (avansat)
+======================================================================
+Pe A, pe un branch separat, schimba settings.txt din steps=2000 in steps=2.
+Commit, push, PR si merge. Consideram schimbarea o eroare intentionata.
+Sarcini:
+1. Actualizeaza main si identifica HASH-ul commit-ului care a schimbat fisierul.
+2. Creeaza exercise/08-revert si anuleaza acel commit printr-un commit nou.
+3. Inspecteaza diferenta; publica si integreaza prin PR.
+4. Verifica valoarea finala si istoricul.
+Succes: steps=2000; commit-ul gresit ramane in istoric, urmat de anulare.
+Alege commit-ul simplu al modificarii, NU merge commit-ul PR-ului.
+Intrebare: de ce evitam reset + force push pe main partajat?
+
+======================================================================
+SCENARIUL 9 — REBASE PE UN BRANCH PRIVAT (avansat)
+======================================================================
+Porneste din main actualizat pe A si B.
+A: creeaza exercise/09-rebase, adauga a.txt si fa commit.
+NU publica inca acest branch; noteaza hash-ul commit-ului.
+B: creeaza exercise/09-colab, adauga b.txt; commit, push, PR si merge.
+Sarcini pe A:
+1. Fetch; observa ca main remote a avansat separat.
+2. Reaplica commit-ul tau peste origin/main prin rebase.
+3. Compara hash-ul initial cu cel nou si inspecteaza istoricul.
+4. Publica branch-ul si integreaza prin PR.
+Succes: branch-ul include b.txt si a.txt; commit-ul A are hash nou.
+Intrebare: de ce nu facem automat acelasi lucru pe un branch partajat?
+Bonus optional: explica --force-with-lease, fara sa il executi pe main.
+
+======================================================================
+SCENARIUL 10 — RECUPERARE PRIN REFLOG SI CHERRY-PICK (complex)
+======================================================================
+Lucreaza numai in repo-ul de laborator. Main trebuie sa fie curat si actualizat.
+Creeaza exercise/10-lost din main; adauga recovered.txt cu 'nu vreau sa pierd asta'.
+Commit DOAR cu acest fisier. Nu publica branch-ul.
+Revino pe main si sterge intentionat branch-ul local exercise/10-lost cu -D.
+Ai pierdut numele branch-ului, dar commit-ul poate fi recuperat.
+Sarcini:
+1. Gaseste commit-ul pierdut prin reflog si verifica-i continutul.
+2. Creeaza rescue/10-lost la hash-ul lui; verifica recovered.txt.
+3. Revino pe main si creeaza exercise/10-recover.
+4. Transfera numai commit-ul recuperat prin cherry-pick.
+5. Verifica, push, PR si merge.
+Succes: recovered.txt exista pe main; ai explicat unde era commit-ul pierdut.
+Intrebare: reflog recupereaza si textul care nu a fost niciodata comis sau stash-uit?
+
+======================================================================
+INDICII — CITESTE DOAR DACA TE BLOCHEZI
+======================================================================
+1. git add poate primi un singur fisier; -u la push stabileste upstream.
+2. git rm --cached; git check-ignore -v; istoricul nu este curatat de ignore.
+3. git log main..origin/main --oneline; git show origin/main:team.txt.
+4. git stash push -u -m 'WIP'; apply pastreaza stash-ul pana il verifici.
+5. Push pe acelasi branch actualizeaza automat PR-ul.
+6. git status iti arata fisierele in conflict; git merge --abort anuleaza merge-ul.
+7. git add accepta fisierul pastrat; git rm accepta stergerea.
+8. git revert creeaza un commit de compensare; evita hash-ul merge-ului aici.
+9. git rebase origin/main, executat de pe branch-ul tau privat.
+10. git reflog; git show <HASH>; git branch rescue/10-lost <HASH>.
+
+======================================================================
+SOLUTII ORIENTATIVE — DUPA INCERCAREA TA
+======================================================================
+Comenzile presupun ca esti in branch-ul indicat si ca ai editat fisierele.
+Daca apare conflict sau eroare, opreste secventa si inspecteaza git status.
+In GitHub, completeaza PR-ul cu problema, schimbarea si verificarea efectuata.
+
+1. git switch -c exercise/01-first-commit
+   [creeaza cele doua fisiere]
+   git status
+   git add intro.txt
+   git diff --cached
+   git commit -m "Add introduction"
+   git push -u origin exercise/01-first-commit
+   [PR si merge; actualizeaza main; sterge scratch.txt manual]
+
+2. git switch -c exercise/02-ignore
+   [creeaza demo.log]
+   git add demo.log
+   git commit -m "Track demonstration log"
+   [creeaza .gitignore si modifica demo.log]
+   git status
+   git rm --cached demo.log
+   [creeaza temp.log]
+   git check-ignore -v temp.log
+   git add .gitignore
+   git diff --cached
+   git commit -m "Ignore logs and stop tracking demo log"
+   git push -u origin exercise/02-ignore
+   [PR si merge]
+   Fisierul demo.log ramane in istoricul commit-ului initial.
+
+3. B: branch, team.txt, commit, push si PR ca in scenariul 1.
+   A, pe main:
+   git fetch origin
+   git status
+   git log main..origin/main --oneline
+   git show origin/main:team.txt
+   git merge --ff-only origin/main
+   git switch -c exercise/03-followup
+   [adauga a doua linie]
+   git add team.txt
+   git commit -m "Extend team note"
+   git push -u origin exercise/03-followup
+   [PR si merge]
+
+4. Pe exercise/04-wip, dupa editarile necomise:
+   git stash push -u -m "Exercise 04 WIP"
+   git status
+   git switch main
+   git switch -c exercise/04-hotfix
+   [editeaza README, commit, push, PR si merge]
+   git switch exercise/04-wip
+   git stash list
+   git stash apply 'stash@{0}'
+   git diff
+   git status
+   [verifica si fisierul nou in editor]
+   git stash drop 'stash@{0}'
+   git add intro.txt notes-wip.txt
+   git commit -m "Complete WIP notes"
+   git push -u origin exercise/04-wip
+   [PR si merge]
+   -u include fisierele untracked, dar nu si fisierele ignorate.
+
+5. A, dupa review:
+   [inlocuieste + cu * in main.py]
+   git diff
+   git add main.py
+   git commit -m "Fix total calculation"
+   git push
+   [B verifica si aproba PR-ul existent; merge]
+
+6. A, pe exercise/06-a:
+   git fetch origin
+   git merge origin/main
+   [deschide settings.txt; pastreaza steps=2000; elimina toti markerii]
+   git add settings.txt
+   git diff --cached
+   git commit -m "Resolve steps conflict using agreed value"
+   git push
+   [verifica PR-ul; merge sau inchidere conform diferentei finale]
+   Inainte de rezolvare, alternativa de abandon: git merge --abort.
+
+7. A, pe exercise/07-edit:
+   git fetch origin
+   git merge origin/main
+   [verifica legacy.py: versiunea corectata este pastrata in working tree]
+   git add legacy.py
+   git commit -m "Resolve modify-delete conflict by keeping corrected script"
+   git push
+   [PR si merge]
+   Daca acceptai stergerea: git rm legacy.py, apoi git commit.
+
+8. Pe main actualizat:
+   git log --oneline -- settings.txt
+   git show <HASH_COMMIT_SIMPLU>
+   git switch -c exercise/08-revert
+   git revert <HASH_COMMIT_SIMPLU>
+   [salveaza/inchide editorul mesajului daca apare]
+   git show --stat HEAD
+   git push -u origin exercise/08-revert
+   [PR si merge]
+   Revert pastreaza istoricul partajat; reset + force push il rescrie.
+
+9. A, pe exercise/09-rebase, dupa integrarea PR-ului B:
+   git log -1 --oneline
+   git fetch origin
+   git rebase origin/main
+   git log --oneline --graph -8
+   git push -u origin exercise/09-rebase
+   [PR si merge]
+   La conflict: editeaza, git add <fisier>, git rebase --continue.
+   Pentru abandon in timpul rebase-ului: git rebase --abort.
+   Pe un branch deja publicat, rescrierea poate cere --force-with-lease.
+   Acesta verifica referinta remote asteptata; nu inlocuieste coordonarea echipei.
+
+10. git switch -c exercise/10-lost
+    [creeaza recovered.txt]
+    git add recovered.txt
+    git commit -m "Add recovery exercise file"
+    git switch main
+    git branch -D exercise/10-lost
+    git reflog
+    git show <HASH_PIERDUT>
+    git branch rescue/10-lost <HASH_PIERDUT>
+    git switch rescue/10-lost
+    [verifica recovered.txt]
+    git switch main
+    git switch -c exercise/10-recover
+    git cherry-pick <HASH_PIERDUT>
+    git show --stat HEAD
+    git push -u origin exercise/10-recover
+    [PR si merge]
+    Reflog este local si are retentie limitata. Nu garanteaza recuperarea
+    modificarilor care nu au fost niciodata comise sau stash-uite.
+
+AUTOEVALUARE FINALA
+Pot explica diferenta main / origin/main si fetch / integrare?
+Pot verifica ce intra in commit fara git add .?
+Pot face un PR si actualiza acelasi PR dupa review?
+Pot rezolva un conflict si pot abandona operatia daca nu sunt sigur?
+Pot alege intre revert, rebase si cherry-pick pe baza scopului?
+Pot recupera un commit local fara sa rescriu main?
+
+Fisa pentru fiecare exercitiu:
+  Ce am vrut sa obtin:
+  Ce comenzi am folosit:
+  Ce s-a schimbat local:
+  Ce s-a schimbat pe GitHub:
+  Cum am verificat rezultatul:
+  Ce inca nu inteleg:
